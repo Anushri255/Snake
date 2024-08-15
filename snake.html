@@ -70,9 +70,67 @@
             foodElement.style.top = food.y + 'px';
             board.appendChild(foodElement);
         }
-        drawFood();
-        drawSnake();
+
+        function randomPosition() {
+            return Math.floor(Math.random() * (boardSize / boxSize)) * boxSize;
+        }
+
+        function placeFood() {
+            food.x = randomPosition();
+            food.y = randomPosition();
+        }
+
+        function moveSnake() {
+            const head = { ...snake[0] };
+            switch (direction) {
+                case 'LEFT':
+                    head.x -= boxSize;
+                    break;
+                case 'RIGHT':
+                    head.x += boxSize;
+                    break;
+                case 'UP':
+                    head.y -= boxSize;
+                    break;
+                case 'DOWN':
+                    head.y += boxSize;
+                    break;
+            }
+
+            snake.unshift(head);
+
+            if (head.x === food.x && head.y === food.y) {
+                score++;
+                placeFood();
+            } else {
+                snake.pop();
+            }
+
+            if (head.x < 0 || head.x >= boardSize || head.y < 0 || head.y >= boardSize || snake.slice(1).some(part => part.x === head.x && part.y === head.y)) {
+                alert('Game Over! Your score: ' + score);
+                snake = [{ x: 160, y: 200 }, { x: 140, y: 200 }, { x: 120, y: 200 }];
+                direction = 'RIGHT';
+                score = 0;
+                placeFood();
+            }
+        }
+
+        function gameLoop() {
+            moveSnake();
+            drawSnake();
+            drawFood();
+            setTimeout(gameLoop, 200);
+        }
+
+        document.addEventListener('keydown', e => {
+            if (e.key === 'ArrowLeft' && direction !== 'RIGHT') direction = 'LEFT';
+            if (e.key === 'ArrowRight' && direction !== 'LEFT') direction = 'RIGHT';
+            if (e.key === 'ArrowUp' && direction !== 'DOWN') direction = 'UP';
+            if (e.key === 'ArrowDown' && direction !== 'UP') direction = 'DOWN';
+        });
+
+        placeFood();
+        gameLoop();
     </script>
 </body>
 </html>
-
