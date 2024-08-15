@@ -2,6 +2,8 @@
 
 This is a basic implementation of the  Snake game using HTML, CSS, and JavaScript. 
 
+## Hosted at https://anushri255.github.io/snakeGame.io/
+
 ## Features
 
 - **Adjustable Board Size**: Choose between Small, Medium, and Large board sizes.
