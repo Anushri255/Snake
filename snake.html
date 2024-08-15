@@ -9,17 +9,18 @@
             align-items: center;
             height: 100vh;
             margin: 0;
+            font-family: Arial, sans-serif;
         }
 
         #game-board {
             position: relative;
             background-color: #fcf58a;
             border: 2px solid #000;
+            margin-top: 20px;
         }
 
         .snake {
             position: absolute;
-            background-color: green;
         }
 
         .food {
@@ -34,6 +35,15 @@
         #controls {
             margin-bottom: 20px;
         }
+
+        #color-controls {
+            margin-top: 20px;
+        }
+
+        select {
+            padding: 5px;
+            font-size: 16px;
+        }
     </style>
 </head>
 <body>
@@ -46,12 +56,24 @@
             <option value="500">Large</option>
         </select>
     </div>
+    <div id="color-controls">
+        <label for="snake-color">Select Snake Color:</label>
+        <select id="snake-color">
+            <option value="green">Green</option>
+            <option value="blue">Blue</option>
+            <option value="red">Red</option>
+            <option value="yellow">Yellow</option>
+            <option value="purple">Purple</option>
+            <option value="orange">Orange</option>
+        </select>
+    </div>
     <div id="game-board"></div>
 
     <script>
         const board = document.getElementById('game-board');
         const scoreDisplay = document.getElementById('score');
         const sizeSelect = document.getElementById('size-select');
+        const snakeColorSelect = document.getElementById('snake-color');
         let boardSize = parseInt(sizeSelect.value);
         const boxSize = 20;
         let snake = [{ x: 160, y: 200 }, { x: 140, y: 200 }, { x: 120, y: 200 }];
@@ -77,6 +99,7 @@
                 snakePart.style.height = boxSize + 'px';
                 snakePart.style.left = part.x + 'px';
                 snakePart.style.top = part.y + 'px';
+                snakePart.style.backgroundColor = snakeColorSelect.value.trim();
                 board.appendChild(snakePart);
             });
         }
