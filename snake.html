@@ -1,13 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simple Snake Game</title>
     <style>
         body {
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
             height: 100vh;
             margin: 0;
@@ -15,8 +13,6 @@
 
         #game-board {
             position: relative;
-            width: 600px;
-            height: 600px;
             background-color: #fcf58a;
             border: 2px solid #000;
         }
@@ -30,23 +26,47 @@
             position: absolute;
             background-color: red;
         }
-        h2{
-            margin-right: 80px;
+
+        h2 {
+            margin-bottom: 20px;
+        }
+
+        #controls {
+            margin-bottom: 20px;
         }
     </style>
 </head>
 <body>
-    <h2>User Score </h2>
+    <h2>User Score: <span id="score">0</span></h2>
+    <div id="controls">
+        <label for="size-select">Choose board size:</label>
+        <select id="size-select">
+            <option value="300">Small</option>
+            <option value="400" selected>Medium</option>
+            <option value="500">Large</option>
+        </select>
+    </div>
     <div id="game-board"></div>
-    
+
     <script>
         const board = document.getElementById('game-board');
-        const boardSize = 400;
+        const scoreDisplay = document.getElementById('score');
+        const sizeSelect = document.getElementById('size-select');
+        let boardSize = parseInt(sizeSelect.value);
         const boxSize = 20;
         let snake = [{ x: 160, y: 200 }, { x: 140, y: 200 }, { x: 120, y: 200 }];
         let direction = 'RIGHT';
         let food = { x: 0, y: 0 };
         let score = 0;
+        let interval;
+
+        function updateBoardSize(size) {
+            boardSize = size;
+            board.style.width = boardSize + 'px';
+            board.style.height = boardSize + 'px';
+            placeFood();
+            resetGame();
+        }
 
         function drawSnake() {
             board.innerHTML = '';
@@ -108,10 +128,7 @@
 
             if (head.x < 0 || head.x >= boardSize || head.y < 0 || head.y >= boardSize || snake.slice(1).some(part => part.x === head.x && part.y === head.y)) {
                 alert('Game Over! Your score: ' + score);
-                snake = [{ x: 160, y: 200 }, { x: 140, y: 200 }, { x: 120, y: 200 }];
-                direction = 'RIGHT';
-                score = 0;
-                placeFood();
+                resetGame();
             }
         }
 
@@ -119,8 +136,28 @@
             moveSnake();
             drawSnake();
             drawFood();
-            setTimeout(gameLoop, 200);
         }
+
+        function startGame() {
+            if (interval) clearInterval(interval);
+            interval = setInterval(gameLoop, 200);
+        }
+
+        function resetGame() {
+            snake = [{ x: 160, y: 200 }, { x: 140, y: 200 }, { x: 120, y: 200 }];
+            direction = 'RIGHT';
+            score = 0;
+            scoreDisplay.innerText = score;
+            placeFood();
+            drawSnake();
+            drawFood();
+            startGame();
+        }
+
+        sizeSelect.addEventListener('change', () => {
+            const newSize = parseInt(sizeSelect.value);
+            updateBoardSize(newSize);
+        });
 
         document.addEventListener('keydown', e => {
             if (e.key === 'ArrowLeft' && direction !== 'RIGHT') direction = 'LEFT';
@@ -129,8 +166,7 @@
             if (e.key === 'ArrowDown' && direction !== 'UP') direction = 'DOWN';
         });
 
-        placeFood();
-        gameLoop();
+        updateBoardSize(boardSize);
     </script>
 </body>
 </html>
