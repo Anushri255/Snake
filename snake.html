@@ -21,6 +21,7 @@
 
         .snake {
             position: absolute;
+            background-color: green; /* Default color if not set by select */
         }
 
         .food {
@@ -47,7 +48,7 @@
     </style>
 </head>
 <body>
-    <h2>User Score: <span id="score">0</span></h2>
+    <h2><span id="score">0</span></h2>
     <div id="controls">
         <label for="size-select">Choose board size:</label>
         <select id="size-select">
@@ -102,6 +103,7 @@
                 snakePart.style.backgroundColor = snakeColorSelect.value.trim();
                 board.appendChild(snakePart);
             });
+            drawFood(); 
         }
 
         function drawFood() {
@@ -144,6 +146,7 @@
 
             if (head.x === food.x && head.y === food.y) {
                 score++;
+                scoreDisplay.innerText = score;
                 placeFood();
             } else {
                 snake.pop();
@@ -158,7 +161,6 @@
         function gameLoop() {
             moveSnake();
             drawSnake();
-            drawFood();
         }
 
         function startGame() {
@@ -173,7 +175,6 @@
             scoreDisplay.innerText = score;
             placeFood();
             drawSnake();
-            drawFood();
             startGame();
         }
 
